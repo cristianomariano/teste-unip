@@ -13,15 +13,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       
-    - name: Install Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
+#    - name: Install Node.js
+#      uses: actions/setup-node@v1
+#      with:
+#        node-version: 12.x
       
-    - name: Build website
-      run: |
-        npm install
-        npm run build
+#    - name: Build website
+#      run: |
+#        npm install
+#        npm run build
         
     - name: Deploy to Azure
       uses: TravisSpomer/deploy-to-azure-storage@v1.4.0
