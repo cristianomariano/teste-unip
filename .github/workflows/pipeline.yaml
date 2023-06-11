@@ -28,3 +28,4 @@ jobs:
       with:
         source-path: public
         sas-url: ${{ secrets.DEPLOY_SAS_URL }}
+        container: aluno01
