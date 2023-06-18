@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 env:
-  ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+#  ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
   ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
   ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
 
@@ -66,7 +66,9 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Az Login
-      run: az login --use-device-code
+      run: |
+        az login --use-device-code
+        az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
