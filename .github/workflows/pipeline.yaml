@@ -61,8 +61,16 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-    - name: Terraform Import
+    - name: Terraform Import Resource Group
       run: terraform import -var='resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' azurerm_resource_group.rg /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP_ID }}
+
+    - name: Terraform Import ASP
+      continue-on-error: true
+      run: terraform import -var='resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' azurerm_service_plan.appserviceplan /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP_ID }}/providers/Microsoft.Web/serverfarms/webapp-asp-unip-croliveira
+
+    - name: Terraform Import WebApp
+      continue-on-error: true
+      run: terraform import -var='resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' azurerm_linux_web_app.webapp /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP_ID }}/providers/Microsoft.Web/sites/webapp-unip-croliveira
 
     # Terraform Apply
     - name: Terraform Apply
