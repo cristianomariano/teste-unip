@@ -6,6 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
+
   build-and-deploy:
     name: Build and deploy
     runs-on: ubuntu-latest
@@ -23,9 +24,33 @@ jobs:
 #        npm install
 #        npm run build
         
-    - name: Deploy to Azure
-      uses: TravisSpomer/deploy-to-azure-storage@v1.4.0
-      with:
-        source-path: public
-        sas-url: ${{ secrets.DEPLOY_SAS_URL }}
-        container: aluno01
+#    - name: Deploy to Azure
+#      uses: TravisSpomer/deploy-to-azure-storage@v1.4.0
+#      with:
+#        source-path: public
+#        sas-url: ${{ secrets.DEPLOY_SAS_URL }}
+#        container: aluno01
+
+  infra:
+    name: Terraform Infra
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Import
+      run: terraform import azurerm_resource_group.test_project /subscriptions/c20a23db-b8be-4b9e-8f54-5b78edddba81/resourceGroups/learn-bf29d7cd-aa73-4c8d-9412-130939b0aec1
+
+    # Terraform Apply
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
