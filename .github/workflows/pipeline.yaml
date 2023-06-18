@@ -61,7 +61,8 @@ jobs:
       with:
         azcliversion: 2.30.0
         inlineScript: |
-          az login --tenant ${{ secrets.AZURE_TENANT_ID }} -u cristianomariano@gmail.com -p "${{ secrets.AZURE_PASS }}"
+          #az login --tenant ${{ secrets.AZURE_TENANT_ID }} -u cristianomariano@gmail.com -p "${{ secrets.AZURE_PASS }}"
+          az login --use-device-code
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
