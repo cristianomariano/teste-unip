@@ -59,7 +59,7 @@ jobs:
     - name: Azure CLI script
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.30.0
+        azcliversion: 2.49.0
         inlineScript: |
           #az login --tenant ${{ secrets.AZURE_TENANT_ID }} -u cristianomariano@gmail.com -p "${{ secrets.AZURE_PASS }}"
           az login --use-device-code
