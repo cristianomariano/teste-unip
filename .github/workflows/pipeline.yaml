@@ -71,4 +71,4 @@ jobs:
 
     # Terraform Apply
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve -var='resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_ID }}'
