@@ -5,6 +5,11 @@ on:
   push:
     branches: [ main ]
 
+env:
+  ARM_CLIENT_ID: "${{ secrets.AZURE_CLIENT_ID }}"
+  ARM_SUBSCRIPTION_ID: "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+  ARM_TENANT_ID: "${{ secrets.AZURE_TENANT_ID }}"
+
 jobs:
 
   build-and-deploy:
@@ -34,6 +39,7 @@ jobs:
   infra:
     name: Terraform Infra
     runs-on: ubuntu-latest
+    environment: dev
     defaults:
       run:
         working-directory: ./infra
@@ -42,6 +48,16 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
+
+#    - name: 'Az CLI login'
+#      uses: azure/login@v1
+#      with:
+#          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+#          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+#          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: AZ Login
+      run: az login -u cristianomariano@gmail.com -p "${{ secrets.AZURE_PASS }}"
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
