@@ -52,7 +52,7 @@ jobs:
       run: terraform init
 
     - name: Terraform Import
-      run: terraform import azurerm_resource_group.test_project /subscriptions/c20a23db-b8be-4b9e-8f54-5b78edddba81/resourceGroups/learn-bf29d7cd-aa73-4c8d-9412-130939b0aec1
+      run: terraform import azurerm_resource_group.rg /subscriptions/c20a23db-b8be-4b9e-8f54-5b78edddba81/resourceGroups/learn-bf29d7cd-aa73-4c8d-9412-130939b0aec1
 
     # Terraform Apply
     - name: Terraform Apply
