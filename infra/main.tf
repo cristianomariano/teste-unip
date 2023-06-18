@@ -14,7 +14,7 @@ provider "azurerm" {
 
 # Create the resource group
 resource "azurerm_resource_group" "rg" {
-  name     = "learn-bf29d7cd-aa73-4c8d-9412-130939b0aec1"
+  name     = var.resource_group_name
   location = "westus"
 }
 
