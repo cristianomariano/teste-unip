@@ -7,71 +7,49 @@ on:
 
 jobs:
 
-  build:
-    name: Build and deploy
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v2
-      
-#    - name: Install Node.js
-#      uses: actions/setup-node@v1
-#      with:
-#        node-version: 12.x
-      
-#    - name: Build website
-#      run: |
-#        npm install
-#        npm run build
-        
-#    - name: Deploy to Azure
-#      uses: TravisSpomer/deploy-to-azure-storage@v1.4.0
-#      with:
-#        source-path: public
-#        sas-url: ${{ secrets.DEPLOY_SAS_URL }}
-#        container: aluno01
-
   infra:
-    name: Terraform Infra
+    name: Infra
     runs-on: ubuntu-latest
     environment: dev
-    needs: build
     defaults:
       run:
         working-directory: ./infra
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
+    # Clona o repositório
     - name: Checkout
       uses: actions/checkout@v3
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    # Efetua login na Azure
     - name: Az Login
       run: az login --use-device-code
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    # Seta a subscription na Azure
     - name: Az Set Subscription
       run: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    # Instala o Terraform
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    # Inicializa o Terraform
     - name: Terraform Init
       run: terraform init
 
+    # Importa o Resource Group da Azure para o Terraform
     - name: Terraform Import Resource Group
-      run: terraform import -var='resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' azurerm_resource_group.rg /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP_ID }}
+      run: terraform import -var='nome_resource_group=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' -var='nome_service_plan=${{ secrets.AZURE_SERVICE_PLAN_NAME }}' -var='nome_webapp=${{ secrets.AZURE_WEBAPP_NAME }}' azurerm_resource_group.rg /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP_ID }}
 
+    # Importa o AppServicePlan da Azure para o Terraform (caso exista)
     - name: Terraform Import ASP
+      run: terraform import -var='nome_resource_group=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' -var='nome_service_plan=${{ secrets.AZURE_SERVICE_PLAN_NAME }}' -var='nome_webapp=${{ secrets.AZURE_WEBAPP_NAME }}' azurerm_service_plan.appserviceplan /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP_ID }}/providers/Microsoft.Web/serverfarms/webapp-asp-unip-croliveira
       continue-on-error: true
-      run: terraform import -var='resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' azurerm_service_plan.appserviceplan /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP_ID }}/providers/Microsoft.Web/serverfarms/webapp-asp-unip-croliveira
 
+    # Importa o WebApp da Azure para o Terraform (caso exista)
     - name: Terraform Import WebApp
+      run: terraform import -var='nome_resource_group=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' -var='nome_service_plan=${{ secrets.AZURE_SERVICE_PLAN_NAME }}' -var='nome_webapp=${{ secrets.AZURE_WEBAPP_NAME }}' azurerm_linux_web_app.webapp /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP_ID }}/providers/Microsoft.Web/sites/webapp-unip-croliveira
       continue-on-error: true
-      run: terraform import -var='resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' azurerm_linux_web_app.webapp /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP_ID }}/providers/Microsoft.Web/sites/webapp-unip-croliveira
 
-    # Terraform Apply
+    # Cria/Atualiza os recursos na Azure
     - name: Terraform Apply
-      run: terraform apply -auto-approve -var='resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_ID }}'
+      run: terraform apply -auto-approve -var='nome_resource_group=${{ secrets.AZURE_RESOURCE_GROUP_ID }}' -var='nome_service_plan=${{ secrets.AZURE_SERVICE_PLAN_NAME }}' -var='nome_webapp=${{ secrets.AZURE_WEBAPP_NAME }}'
