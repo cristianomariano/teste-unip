@@ -26,7 +26,7 @@ resource "azurerm_service_plan" "appserviceplan" {
   os_type             = "Linux"
   sku_name            = "F1"
   tags = {
-    "usage"       = "posunip"
+    "usage"       = "posunipdevops"
   }
 }
 
