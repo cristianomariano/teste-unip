@@ -20,12 +20,6 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
     </properties>
 
-    <parent>
-        <groupId>com.microsoft</groupId>
-        <artifactId>app-service-java-quickstart</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
-
     <build>
         <finalName>booty-duke-app-service</finalName>
 
