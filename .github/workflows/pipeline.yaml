@@ -27,7 +27,7 @@ jobs:
     # Seta a subscription na Azure
     - name: Az Set Subscription
       #run: az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      run: az login --service-principal --tenant ${{ vars.AZURE_TENANT }} -u ${{ vars.AZURE_SERVICE_PRINCIPAL_NAME }} -p ${{ secrets.$AZURE_SECRET }}
+      run: az login --service-principal --tenant ${{ vars.AZURE_TENANT }} -u ${{ vars.AZURE_APPLICATION_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
 
     # Instala o Terraform
     - name: Setup Terraform
