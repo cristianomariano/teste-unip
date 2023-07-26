@@ -27,8 +27,7 @@ jobs:
 
     # Efetua login na Azure
     #- name: Az Login
-      #run: az login --use-device-code
-    #  run: az login --service-principal --tenant ${{ vars.AZURE_TENANT }} -u ${{ vars.AZURE_APPLICATION_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
+    #  run: az login --use-device-code
 
     # Seta a subscription na Azure
     #- name: Az Set Subscription
