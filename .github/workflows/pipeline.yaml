@@ -14,20 +14,25 @@ jobs:
     defaults:
       run:
         working-directory: ./infra
-
+    env:
+      ARM_TENANT_ID: ${{ vars.AZURE_TENANT }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      ARM_CLIENT_ID: ${{ vars.AZURE_APPLICATION_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      
     steps:
     # Clona o repositório
     - name: Checkout
       uses: actions/checkout@v3
 
     # Efetua login na Azure
-    - name: Az Login
+    #- name: Az Login
       #run: az login --use-device-code
-      run: az login --service-principal --tenant ${{ vars.AZURE_TENANT }} -u ${{ vars.AZURE_APPLICATION_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
+    #  run: az login --service-principal --tenant ${{ vars.AZURE_TENANT }} -u ${{ vars.AZURE_APPLICATION_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }}
 
     # Seta a subscription na Azure
-    - name: Az Set Subscription
-      run: az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
+    #- name: Az Set Subscription
+    #  run: az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
     # Instala o Terraform
     - name: Setup Terraform
