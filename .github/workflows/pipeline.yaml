@@ -26,7 +26,8 @@ jobs:
 
     # Seta a subscription na Azure
     - name: Az Set Subscription
-      run: az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      #run: az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      run: az login --service-principal --tenant ${{ vars.AZURE_TENANT }} -u ${{ vars.AZURE_SERVICE_PRINCIPAL_NAME }} -p ${{ secrets.$AZURE_SECRET }}
 
     # Instala o Terraform
     - name: Setup Terraform
@@ -39,6 +40,7 @@ jobs:
     # Importa o Resource Group da Azure para o Terraform
     - name: Terraform Import Resource Group
       run: terraform import -var='nome_resource_group=${{ vars.AZURE_RESOURCE_GROUP_ID }}' -var='nome_service_plan=${{ vars.AZURE_SERVICE_PLAN_NAME }}' -var='nome_webapp=${{ vars.AZURE_WEBAPP_NAME }}' azurerm_resource_group.rg /subscriptions/${{ vars.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.AZURE_RESOURCE_GROUP_ID }}
+      continue-on-error: true
 
     # Importa o AppServicePlan da Azure para o Terraform (caso exista)
     - name: Terraform Import ASP
