@@ -14,11 +14,11 @@ jobs:
     defaults:
       run:
         working-directory: ./infra
-    env:
-      ARM_TENANT_ID: ${{ vars.AZURE_TENANT }}
-      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      ARM_CLIENT_ID: ${{ vars.AZURE_APPLICATION_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+    #env:
+    #  ARM_TENANT_ID: ${{ vars.AZURE_TENANT }}
+    #  ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+    #  ARM_CLIENT_ID: ${{ vars.AZURE_APPLICATION_ID }}
+    #  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       
     steps:
     # Clona o repositório
@@ -26,12 +26,12 @@ jobs:
       uses: actions/checkout@v3
 
     # Efetua login na Azure
-    #- name: Az Login
-    #  run: az login --use-device-code
+    - name: Az Login
+      run: az login --use-device-code
 
     # Seta a subscription na Azure
-    #- name: Az Set Subscription
-    #  run: az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
+    - name: Az Set Subscription
+      run: az account set --subscription ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
     # Instala o Terraform
     - name: Setup Terraform
@@ -44,7 +44,7 @@ jobs:
     # Importa o Resource Group da Azure para o Terraform
     - name: Terraform Import Resource Group
       run: terraform import -var='nome_resource_group=${{ vars.AZURE_RESOURCE_GROUP_ID }}' -var='nome_service_plan=${{ vars.AZURE_SERVICE_PLAN_NAME }}' -var='nome_webapp=${{ vars.AZURE_WEBAPP_NAME }}' azurerm_resource_group.rg /subscriptions/${{ vars.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ vars.AZURE_RESOURCE_GROUP_ID }}
-      continue-on-error: true
+    # continue-on-error: true
 
     # Importa o AppServicePlan da Azure para o Terraform (caso exista)
     - name: Terraform Import ASP
