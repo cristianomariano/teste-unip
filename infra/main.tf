@@ -41,13 +41,13 @@ resource "azurerm_linux_web_app" "webapp" {
   #  minimum_tls_version = "1.2"
     always_on         = false // Required for F1 plan (even though docs say that it defaults to false)
     use_32_bit_worker = true // Required for F1 plan
-  }
 
-  application_type = java
+    application_type = java
 
-  application_stack = {
-    "java_server": "JAVA",
-    "java_server_version": 11,
-    "java_version": "11"
+    application_stack {
+      "java_server" = "JAVA"
+      "java_server_version" = 17
+      "java_version" = "17"
+    }
   }
 }
