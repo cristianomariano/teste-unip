@@ -45,7 +45,7 @@ resource "azurerm_linux_web_app" "webapp" {
     application_stack {
       java_server = "JAVA"
       java_server_version = "17"
-      java_version = "java17"
+      java_version = "17"
     }
   }
 }
