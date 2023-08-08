@@ -42,8 +42,9 @@ resource "azurerm_linux_web_app" "webapp" {
     always_on         = false // Required for F1 plan (even though docs say that it defaults to false)
     use_32_bit_worker = true // Required for F1 plan
 
+    linux_fx_version = "JAVA|17-java17"
+
     application_stack {
-      linux_fx_version = "JAVA|17-java17"
       java_server = "JAVA"
       java_server_version = 17
       java_version = "17"
