@@ -43,6 +43,7 @@ resource "azurerm_linux_web_app" "webapp" {
     use_32_bit_worker = true // Required for F1 plan
 
     application_stack {
+      linux_fx_version = "JAVA|17-java17"
       java_server = "JAVA"
       java_server_version = 17
       java_version = "17"
